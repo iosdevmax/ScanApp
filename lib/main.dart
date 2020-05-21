@@ -1,4 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import './screens/main_screen/main_screen.dart';
+import './screens/camera_screen/camera_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,9 +13,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.red,
+        accentColor: Colors.white,
+        backgroundColor: Color.fromRGBO(147, 0, 0, 1),
       ),
       home: MyHomePage(),
+      routes: {
+        CameraScreen.routeName: (ctx) => CameraScreen(),
+      },
     );
   }
 }
@@ -19,30 +27,6 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color.fromRGBO(147, 0, 0, 1),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.save,
-            ),
-            onPressed: null,
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.scanner,
-            ),
-            onPressed: null,
-          ),
-        ],
-        title: Text('ScanApp'),
-      ),
-      body: Center(
-        child: Center(
-          child: Text('Center'),
-        ),
-      ),
-    );
+    return MainScreen();
   }
 }
