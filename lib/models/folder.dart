@@ -9,11 +9,11 @@ class Folder {
 
   Folder({ String name, List<Document> documents }) : _name = name, _documents = documents;
 
-  String folderName() {
+  String get folderName {
     return _name;
   }
 
-  int documentsCount() {
+  int get documentsCount {
     if (_documents == null) return 0;
     return _documents.length;
   }

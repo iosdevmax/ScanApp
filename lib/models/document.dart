@@ -15,4 +15,12 @@ class Document {
     _pages.add(page);
   }
 
+  String get documentName {
+    return _documentName;
+  }
+
+  int get pagesCount {
+    return _pages.length;
+  }
+
 }

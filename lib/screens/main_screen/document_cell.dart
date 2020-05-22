@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:scan_app/models/document.dart';
 
-import '../../models/folder.dart';
+class DocumentCell extends StatelessWidget {
+  final Document document;
 
-class FolderCell extends StatelessWidget {
-  final Folder folder;
-
-  FolderCell({this.folder});
+  DocumentCell({this.document});
 
   @override
   Widget build(BuildContext context) {
@@ -15,19 +14,27 @@ class FolderCell extends StatelessWidget {
         alignment: Alignment.center,
         height: 90,
         child: ListTile(
-          title: Text(
-            folder.folderName,
-            style: TextStyle(fontSize: 16),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                document.documentName,
+                style: TextStyle(fontSize: 14),
+              ),
+              Text('15/05/2020', style: TextStyle(fontSize: 10),),
+              Text('#tag1, #tag2', style: TextStyle(fontSize: 12)),
+            ],
           ),
           leading: Stack(
             alignment: const Alignment(0.0, 1.0),
             children: <Widget>[
               Container(
                 height: 60,
-                width: 60,
+                width: 40,
                 child: Image.asset(
-                  'assets/images/folder_icon.png',
-                  width: 60,
+                  'assets/images/document_icon.png',
+                  width: 40,
                   height: 60,
                 ),
               ),
@@ -35,7 +42,7 @@ class FolderCell extends StatelessWidget {
                 child: CircleAvatar(
                   backgroundColor: Colors.black54,
                   child: Text(
-                    '${folder.documentsCount}',
+                    '${document.pagesCount}',
                     style: TextStyle(
                       fontSize: 10,
                       color: Colors.white,

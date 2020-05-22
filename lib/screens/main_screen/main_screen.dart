@@ -1,20 +1,30 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:scan_app/models/document.dart';
-import 'package:scan_app/models/folder.dart';
 
-import '../main_screen/folder_cell.dart';
+import '../../core_widgets/table_view_widget.dart';
+import '../../models/document.dart';
+import '../../models/folder.dart';
 import '../main_screen/search_bar.dart';
 import '../camera_screen/camera_screen.dart';
 import '../main_screen/main_screen_popup.dart';
 
 class MainScreen extends StatelessWidget {
-  
-  final List<Folder> folders = [
+  static List<Folder> folders = [
     Folder(name: 'Document Folder 1', documents: [Document()]),
-    Folder(name: 'Document Folder 2', documents: [Document(),Document(),Document(),Document()]),
+    Folder(name: 'Document Folder 2', documents: [Document(), Document(), Document(), Document()]),
     Folder(name: 'Document Folder 3', documents: [Document(), Document()]),
   ];
+
+  static List<Document> docs = [
+    Document(name: 'Document 1', pages: ['2', '2', '3']),
+    Document(name: 'Documents 2', pages: ['we']),
+    Document(name: 'Documemtn 13123', pages: ['qw', 'qw', 'we', 'asd'])
+  ];
+
+  final Map<String, List<Object>> data = {
+    'folders' : folders,
+    'docs' : docs,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -30,18 +40,7 @@ class MainScreen extends StatelessWidget {
       body: Column(
         children: <Widget>[
           SearchBar(),
-          Container(
-            height: 600,
-            child: ListView.separated(
-              separatorBuilder: (context, index) => Divider(
-                color: Colors.grey,
-                height: 0,
-                thickness: 0.5,
-              ),
-              itemBuilder: (ctx, i) => FolderCell(folder: folders[i]),
-              itemCount: folders.length,
-            ),
-          ),
+          TableViewWidget(data),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
