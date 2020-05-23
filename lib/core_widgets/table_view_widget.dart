@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_tableview/flutter_tableview.dart';
+
 import 'package:scan_app/models/document.dart';
 import 'package:scan_app/models/folder.dart';
 import 'package:scan_app/screens/main_screen/document_cell.dart';
@@ -7,6 +9,7 @@ import 'package:scan_app/screens/main_screen/folder_cell.dart';
 
 class TableViewWidget extends StatefulWidget {
   final Map<String, List<Object>> data;
+  final SlidableController slidableController = SlidableController();
 
   TableViewWidget(this.data);
 
@@ -53,8 +56,8 @@ class _TableViewWidgetState extends State<TableViewWidget> {
 
   // cell item widget builder.
   Widget _cellBuilder(BuildContext context, int section, int row) {
-    var folders = widget.data['folders'] as List<Folder>;
-    var docs = widget.data['docs'] as List<Document>;
+    final folders = widget.data['folders'] as List<Folder>;
+    final docs = widget.data['docs'] as List<Document>;
 
     return InkWell(
       onTap: () {
@@ -63,9 +66,11 @@ class _TableViewWidgetState extends State<TableViewWidget> {
       child: section == 1
           ? DocumentCell(
               document: docs[row],
+              controller: widget.slidableController,
             )
           : FolderCell(
               folder: folders[row],
+              controller: widget.slidableController,
             ),
     );
   }

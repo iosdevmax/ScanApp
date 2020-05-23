@@ -24,6 +24,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   flutter_tableview: ^1.0.1
+  flutter_slidable: "^0.5.4"
 
 dev_dependencies:
   flutter_test:
@@ -48,7 +49,8 @@ flutter:
    - assets/images/select_icon.png
    - assets/images/sort_by_icon.png
    - assets/images/document_icon.png
-
+   - assets/images/edit_cell_button.png
+   - assets/images/delete_cell_button.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

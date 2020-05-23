@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         accentColor: Colors.white,
         backgroundColor: Color.fromRGBO(147, 0, 0, 1),
+        dialogBackgroundColor: Color.fromRGBO(242, 242, 247, 0.96)
       ),
       home: MyHomePage(),
       routes: {
