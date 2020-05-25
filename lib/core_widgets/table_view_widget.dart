@@ -48,7 +48,7 @@ class _TableViewWidgetState extends State<TableViewWidget> {
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.only(left: 16.0),
               color: Color.fromRGBO(220, 220, 220, 1),
-              height: 100,
+              height: 25,
               child: Text('I am section header -> section:$section'),
             ),
           );

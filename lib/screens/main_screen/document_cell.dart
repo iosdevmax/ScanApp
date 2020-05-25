@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:scan_app/models/document.dart';
+
+import '../../support_files/helper.dart';
+import '../../screens/document_details_screen/document_details_screen.dart';
+import '../../screens/camera_screen/camera_screen.dart';
+import '../../models/document.dart';
 
 class DocumentCell extends StatelessWidget {
   final Document document;
@@ -22,7 +26,7 @@ class DocumentCell extends StatelessWidget {
           icon: Icons.add_circle,
           foregroundColor: Theme.of(context).backgroundColor,
           onTap: () {
-            print('More button tapped');
+            Helper.presentScreenModally(CameraScreen(), context);
           },
         ),
         IconSlideAction(
@@ -32,6 +36,7 @@ class DocumentCell extends StatelessWidget {
           foregroundColor: Theme.of(context).backgroundColor,
           onTap: () {
             print('Delete button tapped');
+            Helper.showAlert(context, 'Shared button tapped');
           },
         ),
         IconSlideAction(
@@ -41,6 +46,8 @@ class DocumentCell extends StatelessWidget {
           foregroundColor: Theme.of(context).backgroundColor,
           onTap: () {
             print('Delete button tapped');
+            Helper.showAlert(context, 'Delete document?',
+                'Are you sure you want to delete the document?');
           },
         ),
       ],
@@ -102,6 +109,7 @@ class DocumentCell extends StatelessWidget {
               if (controller.activeState != null) {
                 controller.activeState.close();
               }
+              Navigator.of(context).pushNamed(DocumentDetailsScreen.routeName);
             },
           ),
         ),

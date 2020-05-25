@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../support_files/helper.dart';
 import '../../core_widgets/table_view_widget.dart';
 import '../../models/document.dart';
 import '../../models/folder.dart';
@@ -44,19 +45,13 @@ class MainScreen extends StatelessWidget {
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      resizeToAvoidBottomPadding: false,
       floatingActionButton: FloatingActionButton(
         child: Icon(
           Icons.add,
         ),
         onPressed: () {
-          // displaying the camera screen modally
-          Navigator.of(context, rootNavigator: true).push<void>(
-            CupertinoPageRoute(
-              fullscreenDialog: true,
-              builder: (context) => CameraScreen(),
-            ),
-          );
-          // Navigator.of(context).pushNamed(CameraScreen.routeName);
+          Helper.presentScreenModally(CameraScreen(), context);
         },
         foregroundColor: Colors.white,
         backgroundColor: Theme.of(context).backgroundColor,
