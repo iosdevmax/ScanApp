@@ -23,4 +23,12 @@ class Document {
     return _pages.length;
   }
 
+  DateTime get createDate {
+    return _createDate;
+  }
+
+  DateTime get updateDate {
+    return _updateDate;
+  }
+
 }

@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_tableview/flutter_tableview.dart';
 
-import 'package:scan_app/models/document.dart';
-import 'package:scan_app/models/folder.dart';
-import 'package:scan_app/screens/main_screen/document_cell.dart';
-import 'package:scan_app/screens/main_screen/folder_cell.dart';
+import '../screens/main_screen/document_cell.dart';
+import '../screens/main_screen/folder_cell.dart';
+import '../screens/main_screen/table_data_source.dart';
 
 class TableViewWidget extends StatefulWidget {
-  final Map<String, List<Object>> data;
+  final TableDateSource tableDataSource;
+
   final SlidableController slidableController = SlidableController();
 
-  TableViewWidget(this.data);
+  TableViewWidget({this.tableDataSource});
 
   @override
   _TableViewWidgetState createState() => _TableViewWidgetState();
@@ -19,25 +19,20 @@ class TableViewWidget extends StatefulWidget {
 
 class _TableViewWidgetState extends State<TableViewWidget> {
   // How many section.
-  int sectionCount = 2;
+  int get _sectionCount {
+    return widget.tableDataSource.sections;
+  }
 
   // Get row count.
   int _rowCountAtSection(int section) {
-    if (section == 0) {
-      var folders = widget.data['folders'] as List<Folder>;
-      if (folders.length == null) return 0;
-      return folders.length;
-    } else if (section == 1) {
-      var docs = widget.data['docs'] as List<Document>;
-      if (docs == null) return 0;
-      return docs.length;
-    }
-    return 0;
+    return widget.tableDataSource.getRows(section);
   }
 
   // Section header widget builder.
   Widget _sectionHeaderBuilder(BuildContext context, int section) {
     // First section is for folders
+    final sectionTitle = widget.tableDataSource
+        .getSectionTitle(section); //.sortedDocs[section].title;
     return section == 0
         ? null
         : InkWell(
@@ -49,27 +44,25 @@ class _TableViewWidgetState extends State<TableViewWidget> {
               padding: EdgeInsets.only(left: 16.0),
               color: Color.fromRGBO(220, 220, 220, 1),
               height: 25,
-              child: Text('I am section header -> section:$section'),
+              child: Text(sectionTitle),
             ),
           );
   }
 
   // cell item widget builder.
   Widget _cellBuilder(BuildContext context, int section, int row) {
-    final folders = widget.data['folders'] as List<Folder>;
-    final docs = widget.data['docs'] as List<Document>;
-
     return InkWell(
       onTap: () {
         print('click cell item. -> section:$section row:$row');
       },
-      child: section == 1
-          ? DocumentCell(
-              document: docs[row],
+      child: section == 0
+          ? FolderCell(
+              folder: widget.tableDataSource.getFolderAt(row), //folders[row],
               controller: widget.slidableController,
             )
-          : FolderCell(
-              folder: folders[row],
+          : DocumentCell(
+              document: widget.tableDataSource
+                  .getDocumentAt(section, row), //sortedDocs.docs[row],
               controller: widget.slidableController,
             ),
     );
@@ -88,10 +81,10 @@ class _TableViewWidgetState extends State<TableViewWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 600,
+      height: 550,
       //FlutterTableView
       child: FlutterTableView(
-        sectionCount: 3,
+        sectionCount: _sectionCount,
         rowCountAtSection: _rowCountAtSection,
         sectionHeaderBuilder: _sectionHeaderBuilder,
         cellBuilder: _cellBuilder,
