@@ -21,6 +21,7 @@ class PreviewScreen extends StatefulWidget {
 class _PreviewScreenState extends State<PreviewScreen> {
   final PageController controller = PageController();
   int currentPage = 0;
+  int _currentImagePosition = 0;
 
   @override
   void initState() {
@@ -35,6 +36,33 @@ class _PreviewScreenState extends State<PreviewScreen> {
         });
       }
     });
+  }
+
+  _rotateImage() {
+    switch (_currentImagePosition) {
+      case 0:
+        setState(() {
+          _currentImagePosition = -1;
+        });
+        break;
+      case -1:
+        setState(() {
+          _currentImagePosition = -2;
+        });
+        break;
+      case -2:
+        setState(() {
+          _currentImagePosition = -3;
+        });
+        break;
+      case -3:
+        setState(() {
+          _currentImagePosition = 0;
+        });
+        break;
+      default:
+        break;
+    }
   }
 
   _buildImagePage(File imageFile, bool active) {
@@ -104,14 +132,18 @@ class _PreviewScreenState extends State<PreviewScreen> {
                       alignment: FractionalOffset.bottomCenter,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 30, top: 10),
+                          padding: const EdgeInsets.only(
+                              bottom: 30, top: 10, left: 10, right: 10),
                           child: PageView.builder(
                             controller: controller,
                             itemCount: snapshot.data.length,
                             itemBuilder: (ctx, index) {
                               bool active = index == currentPage;
-                              return _buildImagePage(
-                                  snapshot.data[index], active);
+                              return RotatedBox(
+                                quarterTurns: _currentImagePosition,
+                                child: _buildImagePage(
+                                    snapshot.data[index], active),
+                              );
                             },
                           ),
                         ),
@@ -120,7 +152,8 @@ class _PreviewScreenState extends State<PreviewScreen> {
                             : Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                    '${currentPage + 1}/${snapshot.data.length}'),
+                                  '${currentPage + 1}/${snapshot.data.length}',
+                                ),
                               ),
                       ],
                     );
@@ -157,7 +190,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
             PreviewScreenBottomBarItem(
               icon: Icons.rotate_90_degrees_ccw,
               title: 'Rotate',
-              onTap: () {},
+              onTap: () => _rotateImage(),
             ),
             PreviewScreenBottomBarItem(
               icon: Icons.crop_free,
