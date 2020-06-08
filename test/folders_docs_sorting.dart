@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:scan_app/models/document.dart';
 import 'package:scan_app/models/folder.dart';
-import 'package:scan_app/screens/main_screen/main_screen.dart';
 import 'package:scan_app/screens/main_screen/table_data_source.dart';
 
 List<Folder> mockFolders = [

@@ -6,6 +6,11 @@ enum CustomImages {
   document, 
   edit_cell,
   delete_cell,
+  camera_button,
+  library_button,
+  automatic_button,
+  multipage_button,
+  light_button
 }
 
 String image(CustomImages url) {
@@ -17,6 +22,11 @@ String image(CustomImages url) {
     case CustomImages.document: return 'assets/images/document_icon.png';
     case CustomImages.edit_cell: return 'assets/images/edit_cell_button.png';
     case CustomImages.delete_cell: return 'assets/images/delete_cell_button.png';
+    case CustomImages.camera_button: return 'assets/images/camera_button.png';
+    case CustomImages.library_button: return 'assets/images/library_button.png';
+    case CustomImages.automatic_button: return 'assets/images/automatic_button_image.png';
+    case CustomImages.multipage_button: return 'assets/images/multipage_button_image.png';
+    case CustomImages.light_button: return 'assets/images/light_button_image.png';
     default: return '';
   }
 }

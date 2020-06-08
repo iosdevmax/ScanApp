@@ -26,6 +26,12 @@ dependencies:
   flutter_tableview: ^1.0.1
   flutter_slidable: "^0.5.4"
   intl: ^0.16.1
+  camera: ^0.5.8+2
+  lamp: ^0.0.6
+  path_provider: ^1.6.9
+  thumbnails: ^1.0.1
+  path:
+  rxdart: ^0.24.1
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +58,13 @@ flutter:
    - assets/images/document_icon.png
    - assets/images/edit_cell_button.png
    - assets/images/delete_cell_button.png
+   - assets/images/camera_button.png
+   - assets/images/library_button.png
+   - assets/images/automatic_button_image.png
+   - assets/images/multipage_button_image.png
+   - assets/images/light_button_image.png
+
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

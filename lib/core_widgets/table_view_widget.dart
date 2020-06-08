@@ -57,12 +57,11 @@ class _TableViewWidgetState extends State<TableViewWidget> {
       },
       child: section == 0
           ? FolderCell(
-              folder: widget.tableDataSource.getFolderAt(row), //folders[row],
+              folder: widget.tableDataSource.getFolderAt(row),
               controller: widget.slidableController,
             )
           : DocumentCell(
-              document: widget.tableDataSource
-                  .getDocumentAt(section, row), //sortedDocs.docs[row],
+              document: widget.tableDataSource.getDocumentAt(section, row),
               controller: widget.slidableController,
             ),
     );
@@ -80,8 +79,7 @@ class _TableViewWidgetState extends State<TableViewWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 550,
+    return Expanded(
       //FlutterTableView
       child: FlutterTableView(
         sectionCount: _sectionCount,

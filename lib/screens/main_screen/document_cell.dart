@@ -66,7 +66,7 @@ class DocumentCell extends StatelessWidget {
                   style: TextStyle(fontSize: 14),
                 ),
                 Text(
-                  '15/05/2020',
+                  document.createDate.toString(),
                   style: TextStyle(fontSize: 10),
                 ),
                 Text('#tag1, #tag2', style: TextStyle(fontSize: 12)),

@@ -21,16 +21,3 @@ class Folder {
   }
 
 }
-
-class UserData {
-  List<Folder> folders;
-  List<Document> documents;
-
-  UserData({this.folders, this.documents});
-
-
-  void sort() {
-
-  }
-
-}

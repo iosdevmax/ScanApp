@@ -5,7 +5,7 @@ class Helper {
   /// Present screen modally iOS style
   ///
   static void presentScreenModally(
-      StatelessWidget screen, BuildContext context) {
+      StatefulWidget screen, BuildContext context) {
     Navigator.of(context, rootNavigator: true).push<void>(
       CupertinoPageRoute(
         fullscreenDialog: true,
@@ -16,7 +16,8 @@ class Helper {
 
   /// show AlertDialog
   ///
-  static void showAlert(BuildContext context, String title, [String content = '']) {
+  static void showAlert(BuildContext context, String title,
+      [String content = '', Function onConfirm, Function onCancel]) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -27,12 +28,14 @@ class Helper {
             child: Text('No'),
             onPressed: () {
               Navigator.of(ctx).pop(false);
+              if (onCancel != null) onCancel();
             },
           ),
           FlatButton(
             child: Text('Yes'),
             onPressed: () {
               Navigator.of(ctx).pop(true);
+              if (onConfirm != null) onConfirm();
             },
           ),
         ],
