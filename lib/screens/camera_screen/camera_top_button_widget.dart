@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:scan_app/support_files/constants.dart';
 
@@ -17,13 +19,19 @@ class _TopButtonState extends State<TopButton> {
   @override
   Widget build(BuildContext context) {
     print(widget.isEnabled);
-    Color color = widget.isEnabled ? Theme.of(context).backgroundColor : Colors.white;
+    Color color =
+        widget.isEnabled ? Theme.of(context).backgroundColor : Colors.white;
     if (widget.action == null) {
       color = Colors.white24;
     }
 
+    final bool iphonex =
+        (Platform.isIOS) && (MediaQuery.of(context).size.height >= 812.0);
+    final double _bottomPadding = iphonex ? 25.0 : 0.0;
+
     return GestureDetector(
       child: Container(
+        margin: EdgeInsets.only(top: _bottomPadding),
         decoration: BoxDecoration(
           border: Border.all(color: color, width: 0.5),
           borderRadius: BorderRadius.circular(5),

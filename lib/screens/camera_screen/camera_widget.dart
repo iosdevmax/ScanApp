@@ -58,7 +58,8 @@ class _CameraWidgetState extends State<CameraWidget> {
       });
 
       if (!widget.multipage) {
-        Navigator.of(context).pushNamed(PreviewScreen.routeName);
+        Navigator.of(context)
+            .pushNamed(PreviewScreen.routeName, arguments: _images);
       }
     }
   }
@@ -210,11 +211,12 @@ class _CameraWidgetState extends State<CameraWidget> {
                       action: snapshot.data == false
                           ? null
                           : (value) {
+                              print(value);
                               widget.isLightOn = value;
                               if (value == true) {
-                                Lamp.turnOff();
-                              } else {
                                 Lamp.turnOn();
+                              } else {
+                                Lamp.turnOff();
                               }
                               print('Light pressed');
                             },

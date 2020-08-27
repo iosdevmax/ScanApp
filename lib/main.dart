@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:scan_app/bloc/bloc_provider.dart';
 import 'package:scan_app/bloc/captured_image_bloc.dart';
 import 'package:scan_app/bloc/user_data_bloc.dart';
-import 'package:scan_app/screens/crop_screen/crop_screen.dart';
 
 import './screens/filter_screen/filter_screen.dart';
 import './screens/preview_screen/preview_screen.dart';
@@ -37,7 +36,6 @@ class MyApp extends StatelessWidget {
             DocumentDetailsScreen.routeName: (ctx) => DocumentDetailsScreen(),
             MainScreen.routeName: (ctx) => MainScreen(),
             FilterScreen.routeName: (ctx) => FilterScreen(),
-            CropScreen.routeName: (ctx) => CropScreen(),
           },
         ),
       ),

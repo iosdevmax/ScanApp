@@ -12,7 +12,7 @@ class CapturedImageBloc implements Bloc {
   List<FileSystemEntity> _images;
   List<FileSystemEntity> get images => _images;
 
-  StreamController<List<FileSystemEntity>> _imagesController = BehaviorSubject();
+  BehaviorSubject<List<FileSystemEntity>> _imagesController = BehaviorSubject();
 
   Stream<List<FileSystemEntity>> get imagesStream => _imagesController.stream;
 
@@ -79,6 +79,19 @@ class CapturedImageBloc implements Bloc {
       return _images.length == 0;
     }
     return false;
+  }
+
+  FileSystemEntity getImageAt(int index) {
+    final images = _imagesController.value;
+    return images[index];
+  }
+
+  List<FileSystemEntity> retrieveImages() {
+    return _imagesController.value;
+  }
+
+  void updateImageAt(int index, FileSystemEntity newImage) {
+    _imagesController.value[index] = newImage;
   }
 
   @override

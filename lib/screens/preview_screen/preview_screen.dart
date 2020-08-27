@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:scan_app/bloc/bloc_provider.dart';
 import 'package:scan_app/bloc/captured_image_bloc.dart';
+import 'package:scan_app/models/preview_image.dart';
 
-import 'package:scan_app/screens/camera_screen/camera_screen.dart';
-import 'package:scan_app/screens/crop_screen/crop_screen.dart';
 import 'package:scan_app/screens/filter_screen/filter_screen.dart';
 import 'package:scan_app/screens/main_screen/main_screen.dart';
 import 'package:scan_app/screens/preview_screen/preview_bottom_bar_item.dart';
@@ -21,7 +21,7 @@ class PreviewScreen extends StatefulWidget {
 class _PreviewScreenState extends State<PreviewScreen> {
   final PageController controller = PageController();
   int currentPage = 0;
-  int _currentImagePosition = 0;
+  List<FileSystemEntity> _images;
 
   @override
   void initState() {
@@ -38,34 +38,16 @@ class _PreviewScreenState extends State<PreviewScreen> {
     });
   }
 
-  _rotateImage() {
-    switch (_currentImagePosition) {
-      case 0:
-        setState(() {
-          _currentImagePosition = -1;
-        });
-        break;
-      case -1:
-        setState(() {
-          _currentImagePosition = -2;
-        });
-        break;
-      case -2:
-        setState(() {
-          _currentImagePosition = -3;
-        });
-        break;
-      case -3:
-        setState(() {
-          _currentImagePosition = 0;
-        });
-        break;
-      default:
-        break;
-    }
-  }
+  // List<PreviewImage> _buildPreviewImages(List<FileSystemEntity> images) {
+  //   List<PreviewImage> previewImages = [];
+  //   images.forEach((element) {
+  //     var image = PreviewImage(element);
+  //     previewImages.add(image);
+  //   });
+  //   return previewImages;
+  // }
 
-  _buildImagePage(File imageFile, bool active) {
+  _buildImagePage(File image, bool active) {
     // Animated Properties
     final double top = active ? 0 : 50;
 
@@ -73,95 +55,127 @@ class _PreviewScreenState extends State<PreviewScreen> {
       duration: Duration(milliseconds: 400),
       curve: Curves.easeOutQuint,
       margin: EdgeInsets.only(top: top, bottom: 0, right: 0),
-      child: Image.file(
-        imageFile,
+      child: Image.file(image),
+    );
+  }
+
+  void _cropAndRotateOriginalImage(FileSystemEntity image, BuildContext context) async {
+    File croppedImage = await ImageCropper.cropImage(
+      sourcePath: image.path,
+      maxWidth: 312,
+      maxHeight: 512,
+      aspectRatioPresets: [
+        CropAspectRatioPreset.original,
+      ],
+      androidUiSettings: AndroidUiSettings(
+          toolbarTitle: 'Edit document',
+          toolbarColor: Theme.of(context).backgroundColor,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false),
+      iosUiSettings: IOSUiSettings(
+        minimumAspectRatio: 1.0,
       ),
     );
+
+    if (croppedImage != null) {
+      setState(() {
+        _images[currentPage] = croppedImage;
+      });
+    }
+    return null;
   }
 
   @override
   Widget build(BuildContext context) {
+    var settings = ModalRoute.of(context).settings;
+    final _imagesToEdit = settings.arguments as List<FileSystemEntity>;
+    this._images = _imagesToEdit;
+
     final _block = BlocProvider.of<CapturedImageBloc>(context);
-    _block.getAllSavedImage();
+
+    final bool iphonex =
+        (Platform.isIOS) && (MediaQuery.of(context).size.height >= 812.0);
+    final double _bottomPadding = iphonex ? 25.0 : 0.0;
 
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Theme.of(context).backgroundColor,
-          title: Text('Preview Screen'),
-          actions: <Widget>[
-            FlatButton(
-              highlightColor: Colors.transparent,
-              child: Text(
-                'Save',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500),
-              ),
-              onPressed: () {
-                Navigator.of(context).pushNamed(MainScreen.routeName);
-              },
+        backgroundColor: Theme.of(context).backgroundColor,
+        title: Text('Preview Screen'),
+        actions: <Widget>[
+          FlatButton(
+            highlightColor: Colors.transparent,
+            child: Text(
+              'Save',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500),
             ),
-          ],
-          leading: GestureDetector(
-            child: Icon(Icons.close),
-            onTap: () {
-              Helper.showAlert(
-                  context, '', 'Your document will be deleted. Are you sure?',
-                  () async {
-                _block.clearImages();
-                Navigator.of(context).pop();
-              }, () {
-                print('cancel');
-              });
+            onPressed: () {
+              Navigator.of(context).pushNamed(MainScreen.routeName);
             },
-          )),
+          ),
+        ],
+        leading: GestureDetector(
+          child: Icon(Icons.close),
+          onTap: () {
+            Helper.showAlert(
+                context, '', 'Your document will be deleted. Are you sure?',
+                () async {
+              _block.clearImages();
+              Navigator.of(context).pop();
+            }, () {
+              print('cancel');
+            });
+          },
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(0.0),
-          child: StreamBuilder<List<FileSystemEntity>>(
-            stream: _block.imagesStream,
-            builder: (context, snapshot) {
-              return snapshot.data == null
-                  ? Container(
-                      child: Center(
-                        child: Text('No data'),
+          child: _images == null
+              ? Container(
+                  child: Center(
+                    child: Text('No data'),
+                  ),
+                )
+              : Stack(
+                  alignment: FractionalOffset.bottomCenter,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: 30,
+                        top: 10,
+                        left: 10,
+                        right: 10,
                       ),
-                    )
-                  : Stack(
-                      alignment: FractionalOffset.bottomCenter,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              bottom: 30, top: 10, left: 10, right: 10),
-                          child: PageView.builder(
-                            controller: controller,
-                            itemCount: snapshot.data.length,
-                            itemBuilder: (ctx, index) {
-                              bool active = index == currentPage;
-                              return RotatedBox(
-                                quarterTurns: _currentImagePosition,
-                                child: _buildImagePage(
-                                    snapshot.data[index], active),
-                              );
-                            },
+                      child: PageView.builder(
+                        controller: controller,
+                        itemCount: _images.length,
+                        itemBuilder: (ctx, index) {
+                          bool active = index == currentPage;
+                          return _buildImagePage(
+                            _images[index],
+                            active,
+                          );
+                        },
+                      ),
+                    ),
+                    _images.length == 0
+                        ? Container()
+                        : Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              '${currentPage + 1}/${_images.length}',
+                            ),
                           ),
-                        ),
-                        snapshot.data.length == 0
-                            ? Container()
-                            : Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  '${currentPage + 1}/${snapshot.data.length}',
-                                ),
-                              ),
-                      ],
-                    );
-            },
-          ),
+                  ],
+                ),
         ),
       ),
       bottomNavigationBar: Container(
+        margin: EdgeInsets.only(bottom: _bottomPadding),
         decoration: BoxDecoration(
           border: Border.symmetric(
             vertical: BorderSide(width: 0.2),
@@ -183,31 +197,37 @@ class _PreviewScreenState extends State<PreviewScreen> {
             PreviewScreenBottomBarItem(
               icon: Icons.photo_filter,
               title: 'Filter',
-              onTap: () {
-                Navigator.of(context).pushNamed(FilterScreen.routeName);
+              onTap: () async {
+                // final imageToEdit = _block.getImageAt(currentPage);
+                // final filteredImage = await Navigator.of(context)
+                //     .pushNamed(FilterScreen.routeName, arguments: imageToEdit) as Image;
+ 
+                // setState(() {
+                  // _images[currentPage].filteredImage = filteredImage;
+                // });
               },
             ),
             PreviewScreenBottomBarItem(
-              icon: Icons.rotate_90_degrees_ccw,
-              title: 'Rotate',
-              onTap: () => _rotateImage(),
-            ),
-            PreviewScreenBottomBarItem(
-              icon: Icons.crop_free,
-              title: 'Crop',
-              onTap: () {
+              icon: Icons.crop_rotate,
+              title: 'Edit',
+              onTap: () async {
                 // go to crop screen
-                Navigator.of(context).pushNamed(CropScreen.routeName);
+                // final imageToEdit = _block.getImageAt(currentPage);
+                // _cropAndRotateOriginalImage(imageToEdit, context);
               },
             ),
             PreviewScreenBottomBarItem(
               icon: Icons.delete,
               title: 'Delete',
               onTap: () async {
-                await _block.deleteImage(currentPage);
-                if (await _block.isEmptyImageList()) {
-                  Navigator.of(context).pop();
-                }
+                setState(() {
+                  _images.removeAt(currentPage);
+                  _block.deleteImage(currentPage);
+                  if (_images.isEmpty) {
+                    _block.clearImages();
+                    Navigator.of(context).pop();
+                  }
+                });
               },
             ),
           ],

@@ -10,7 +10,11 @@ enum CustomImages {
   library_button,
   automatic_button,
   multipage_button,
-  light_button
+  light_button,
+  black_white_filter,
+  greyscale_filter,
+  color_filter,
+  cross
 }
 
 String image(CustomImages url) {
@@ -27,6 +31,10 @@ String image(CustomImages url) {
     case CustomImages.automatic_button: return 'assets/images/automatic_button_image.png';
     case CustomImages.multipage_button: return 'assets/images/multipage_button_image.png';
     case CustomImages.light_button: return 'assets/images/light_button_image.png';
+    case CustomImages.black_white_filter: return 'assets/images/black_white_filter.png';
+    case CustomImages.greyscale_filter: return 'assets/images/greyscale_filter.png';
+    case CustomImages.color_filter: return 'assets/images/color_filter.png';
+    case CustomImages.cross: return 'assets/images/cross.png';
     default: return '';
   }
 }

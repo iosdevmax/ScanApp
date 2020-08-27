@@ -1,4 +1,3 @@
-
 import '../../models/document.dart';
 import '../../models/folder.dart';
 
@@ -83,7 +82,8 @@ class TableDateSource {
   List<MonthYear> _extractUniqueDateFrom(List<Document> documents) {
     final List<MonthYear> monthYearDates = [];
     documents.forEach((document) {
-      final date = MonthYear(month: document.createDate.month, year: document.createDate.year);
+      final date = MonthYear(
+          month: document.createDate.month, year: document.createDate.year);
       monthYearDates.add(date);
     });
     return monthYearDates.toSet().toList();
@@ -95,16 +95,16 @@ class TableDateSource {
     /// sorting docs by creation date
     _docs.sort((a, b) => b.createDate.compareTo(a.createDate));
 
-    final uniqueDates =  _extractUniqueDateFrom(_docs);
+    final uniqueDates = _extractUniqueDateFrom(_docs);
 
     final List<SortedDocuments> sorted = [];
 
     uniqueDates.forEach((date) {
       final currentMonthDocs =
           _docs.where((doc) => doc.createDate.isSame(date)).toList();
-      final sortedDocs = SortedDocuments(
-          docs: currentMonthDocs, title: date.title);
-          sorted.add(sortedDocs);
+      final sortedDocs =
+          SortedDocuments(docs: currentMonthDocs, title: date.title);
+      sorted.add(sortedDocs);
     });
 
     return sorted;
